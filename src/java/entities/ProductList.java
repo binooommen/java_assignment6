@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,12 +29,13 @@ public class ProductList {
     private List<Product> productList;
 
     public ProductList() {
+        productList = new ArrayList<>();
         try (Connection conn = getConnection()) {
-            String query = "SELECT * FROM product;";
+            String query = "SELECT * FROM product";
             PreparedStatement pstmt = conn.prepareStatement(query);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                Product p = new Product(rs.getInt("id"),
+                Product p = new Product(rs.getInt("productID"),
                         rs.getString("name"),
                         rs.getString("description"),
                         rs.getInt("quantity"));
@@ -68,7 +70,7 @@ public class ProductList {
                 p.getName(),
                 p.getDescription(),
                 String.valueOf(p.getQuantity()),
-                String.valueOf(p.getProductID()));
+                String.valueOf(productID));
         if (result > 0) {
             Product original = get(productID);
             original.setName(p.getName());
@@ -120,23 +122,23 @@ public class ProductList {
         return conn;
     }
 
-    private String getResults(String query, String... params) throws SQLException {
-        StringBuilder sb = new StringBuilder();
-        try (Connection conn = getConnection()) {
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            for (int i = 1; i <= params.length; i++) {
-                pstmt.setString(i, params[i - 1]);
-            }
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                sb.append(String.format("%s\t%s\t%s\n", rs.getInt("id"), rs.getString("name"),
-                        rs.getString("description"), rs.getInt("quantity")));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return sb.toString();
-    }
+//    private String getResults(String query, String... params) throws SQLException {
+//        StringBuilder sb = new StringBuilder();
+//        try (Connection conn = getConnection()) {
+//            PreparedStatement pstmt = conn.prepareStatement(query);
+//            for (int i = 1; i <= params.length; i++) {
+//                pstmt.setString(i, params[i - 1]);
+//            }
+//            ResultSet rs = pstmt.executeQuery();
+//            while (rs.next()) {
+//                sb.append(String.format("%s\t%s\t%s\n", rs.getInt("id"), rs.getString("name"),
+//                        rs.getString("description"), rs.getInt("quantity")));
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ProductList.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return sb.toString();
+//    }
 
     private int doUpdate(String query, String... params) {
         int numChanges = 0;
