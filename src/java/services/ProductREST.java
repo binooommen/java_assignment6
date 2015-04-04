@@ -50,7 +50,7 @@ public class ProductREST {
         Response response;
         try{
             productList.add(new Product(json));
-            response = Response.ok().build();
+            response = Response.ok(productList.get(json.getInt("productID")).toJSON()).build();
         } catch(Exception ex){
             response = Response.status(500).build();
         }
@@ -65,7 +65,7 @@ public class ProductREST {
         try{
             Product p = new Product(json);
             productList.set(id, p);
-            response = Response.ok().build();
+            response = Response.ok(productList.get(id).toJSON()).build();
         } catch(Exception ex){
             response = Response.status(500).build();
         }
@@ -79,7 +79,7 @@ public class ProductREST {
         Response response;
         try{
             productList.remove(id);
-            response = Response.ok().build();
+            response = Response.ok("Deleted product with id "+id).build();
         } catch(Exception ex){
             response = Response.status(500).build();
         }

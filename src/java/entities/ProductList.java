@@ -18,6 +18,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 
 /**
  *
@@ -66,7 +67,7 @@ public class ProductList {
 
     public void set(int productID, Product p) {
         int result = doUpdate(
-                "update product SET name = ?, description = ?, quantity = ? values where productID = ?",
+                "update product SET name = ?, description = ?, quantity = ? where productID = ?",
                 p.getName(),
                 p.getDescription(),
                 String.valueOf(p.getQuantity()),
@@ -93,6 +94,8 @@ public class ProductList {
             throw new Exception("Error Inserting");
         }
     }
+    
+
 
     public void remove(Product p) throws Exception {
         remove(p.getProductID());
@@ -139,7 +142,6 @@ public class ProductList {
 //        }
 //        return sb.toString();
 //    }
-
     private int doUpdate(String query, String... params) {
         int numChanges = 0;
         try (Connection conn = getConnection()) {
